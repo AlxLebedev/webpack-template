@@ -1,3 +1,3 @@
-# News aggregator
+# Webpack template
 
-[Link]() to deployment
+Собираю свой понятный и простой конфиг для текущих задач
