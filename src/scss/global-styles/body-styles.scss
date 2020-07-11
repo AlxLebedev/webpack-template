@@ -2,11 +2,10 @@
 @import "../variables/font-family.scss";
 
 body {
-  font-family: $font-oswald;
+  font-family: $font-arial;
   color: $color-white;
   font-size: 14px;
   line-height: 18px;
   margin: auto;
   min-width: 320px;
-  background-color: rgb(114, 114, 236);
 }
