@@ -1,0 +1,14 @@
+@import './variables/colors.scss';
+
+@import './global-styles/fonts.scss';
+@import './global-styles/body-styles.scss';
+
+body {
+  background-color: $color-gray;
+  color: $color-white;
+}
+
+.about__title {
+  font-size: 42px;
+  font-style: italic;
+}

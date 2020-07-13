@@ -1,17 +1,31 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const WebpackMd5Hash = require('webpack-md5-hash');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    index: './src/index.js',
+    about: './src/about.js',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].[chunkhash].js',
   },
   plugins: [
+    new WebpackMd5Hash(),
     new HtmlWebpackPlugin({
+      chunks: ['index'],
+      hash: true,
       template: './src/index.html',
-      filename: './index.html',
+      filename: 'index.html',
+      favicon: './src/static/favicon.ico',
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ['about'],
+      hash: true,
+      template: './src/about.html',
+      filename: 'about.html',
       favicon: './src/static/favicon.ico',
     }),
     new MiniCssExtractPlugin({
