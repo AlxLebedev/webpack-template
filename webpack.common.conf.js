@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     index: './src/js/index.js',
     about: './src/js/about.js',
+    graphics: './src/js/graphics.js',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -26,6 +27,13 @@ module.exports = {
       hash: true,
       template: './src/pages/about.html',
       filename: 'about.html',
+      favicon: './src/static/favicon.ico',
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ['graphics'],
+      hash: true,
+      template: './src/pages/graphics.html',
+      filename: 'graphics.html',
       favicon: './src/static/favicon.ico',
     }),
     new MiniCssExtractPlugin({

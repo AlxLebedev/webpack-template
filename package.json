@@ -50,6 +50,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "regenerator-runtime": "^0.13.9",
-    "swiper": "^6.0.2"
+    "swiper": "^6.0.2",
+    "three": "^0.144.0"
   }
 }
