@@ -3,6 +3,7 @@ import { GUI } from 'dat.gui';
 import ColorGUIHelper from "../helpers/ColorGUIHelper";
 import makeGUIFolder from "../helpers/makeGUIFolder";
 import DegRadHelper from "../helpers/DegRadHelper";
+import MinMaxGUIHelper from "../helpers/MinMaxGUIHelper";
 import {
     Scene,
     PerspectiveCamera,
@@ -22,17 +23,24 @@ import {
     PointLight,
     PointLightHelper,
     SpotLight,
-    SpotLightHelper
+    SpotLightHelper,
+    CameraHelper
 } from 'three';
 
 export default class ThreeExampleFirst {
     constructor() {
         this.canvas = document.getElementById('canvas');
+        this.view1Elem = document.getElementById('view1');
+        this.view2Elem = document.getElementById('view2');
         this.scene = new Scene();
         this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-        this.controls = new OrbitControls(this.camera, this.canvas);
+        this.cameraHelper = new CameraHelper(this.camera);
+        this.controls = new OrbitControls(this.camera, this.view1Elem);
+        this.additionalCamera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
+        this.additionalControls = new OrbitControls(this.additionalCamera, this.view2Elem);
         this.renderer = new WebGLRenderer({ canvas: this.canvas });
         this.gui = new GUI();
+        this.minMaxGUIHelper = new MinMaxGUIHelper(this.camera, 'near', 'far', 0.1);
         this.light = null;
         this.lightHelper = null;
     }
@@ -47,8 +55,8 @@ export default class ThreeExampleFirst {
         // this.addAmbientLight();
         // this.addHemisphereLight();
         // this.addDirectionalLight();
-        // this.addPointLight();
-        this.addSpotLight();
+        this.addPointLight();
+        // this.addSpotLight();
         
         this.updateLight();
 
@@ -58,10 +66,20 @@ export default class ThreeExampleFirst {
 
     configurateEquipment() {
         this.camera.position.set(0, 10, 35);
-        this.gui.add(this.camera.position, 'z', 0, 60).name('Camera Z');
+        this.gui.add(this.camera, 'fov', 1, 180).name('Camera FOV');
+        this.gui.add(this.minMaxGUIHelper, 'min', 0.1, 150, 0.1).name('Camera near');
+        this.gui.add(this.minMaxGUIHelper, 'max', 0.1, 150, 0.1).name('Camera far');
 
         this.controls.target.set(0, 5, 0);
         this.controls.update();
+
+        this.additionalCamera.position.set(40, 10, 60);
+        this.additionalCamera.lookAt(0, 5, 0);
+
+        this.additionalControls.target.set(0, 5, 0);
+        this.additionalControls.update();
+
+        this.scene.add(this.cameraHelper);
     }
 
     createPlaneTexture() {
@@ -113,7 +131,7 @@ export default class ThreeExampleFirst {
         this.scene.add(this.light);
 
         this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01);
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Light intensity');
     }
 
     addHemisphereLight() {
@@ -127,7 +145,7 @@ export default class ThreeExampleFirst {
 
         this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Sky color');
         this.gui.addColor(new ColorGUIHelper(this.light, 'groundColor'), 'value').name('Ground Color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01);
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Light intensity');
     }
 
     addDirectionalLight() {
@@ -142,7 +160,7 @@ export default class ThreeExampleFirst {
         this.scene.add(this.light.target);
 
         this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01);
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Light intensity');
 
         makeGUIFolder(this.gui, this.light.position, 'position', this.updateLight.bind(this));
         makeGUIFolder(this.gui, this.light.target.position, 'target', this.updateLight.bind(this));
@@ -161,8 +179,8 @@ export default class ThreeExampleFirst {
         this.scene.add(this.lightHelper);
 
         this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01);
-        this.gui.add(this.light, 'distance', 0, 40).onChange(this.updateLight.bind(this));
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Light intensity');
+        this.gui.add(this.light, 'distance', 0, 40).name('Light distance').onChange(this.updateLight.bind(this));
 
         makeGUIFolder(this.gui, this.light.position, 'position', this.updateLight.bind(this));
     }
@@ -181,9 +199,9 @@ export default class ThreeExampleFirst {
         this.scene.add(this.lightHelper);
 
         this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01);
-        this.gui.add(new DegRadHelper(this.light, 'angle'), 'value', 0, 90).name('angle').onChange(this.updateLight.bind(this));
-        this.gui.add(this.light, 'penumbra', 0, 1, 0.01);
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Light intensity');
+        this.gui.add(new DegRadHelper(this.light, 'angle'), 'value', 0, 90).name('Light angle').onChange(this.updateLight.bind(this));
+        this.gui.add(this.light, 'penumbra', 0, 1, 0.01).name('Light penumbra');
 
         makeGUIFolder(this.gui, this.light.position, 'position', this.updateLight.bind(this));
         makeGUIFolder(this.gui, this.light.target.position, 'target', this.updateLight.bind(this));
@@ -197,8 +215,46 @@ export default class ThreeExampleFirst {
         this.lightHelper && this.lightHelper.update();
     }
 
+    setScissorForElement(elem) {
+        const canvasRect = this.canvas.getBoundingClientRect();
+        const elemRect = elem.getBoundingClientRect();
+       
+        // вычисляем относительный прямоугольник холста
+        const right = Math.min(elemRect.right, canvasRect.right) - canvasRect.left;
+        const left = Math.max(0, elemRect.left - canvasRect.left);
+        const bottom = Math.min(elemRect.bottom, canvasRect.bottom) - canvasRect.top;
+        const top = Math.max(0, elemRect.top - canvasRect.top);
+       
+        const width = Math.min(canvasRect.width, right - left);
+        const height = Math.min(canvasRect.height, bottom - top);
+       
+        //  установка области отсечения для рендеринга только на эту часть холста
+        this.renderer.setScissor(left, top, width, height);
+        this.renderer.setViewport(left, top, width, height);
+       
+        // return aspect
+        return width / height;
+    }
+
     renderScene() {
+        this.renderer.setScissorTest(true);
+
+        const mainAspect = this.setScissorForElement(this.view1Elem);
+        this.camera.aspect = mainAspect;
+        this.camera.updateProjectionMatrix();
+        this.cameraHelper.update();
+        this.cameraHelper.visible = false;
+        
+
         this.renderer.render(this.scene, this.camera);
+
+        const additionalAspect = this.setScissorForElement(this.view2Elem);
+        this.additionalCamera.aspect = additionalAspect;
+        this.additionalCamera.updateProjectionMatrix();
+        this.cameraHelper.visible = true;
+
+        this.renderer.render(this.scene, this.additionalCamera);
+
         requestAnimationFrame(this.renderScene.bind(this));
     }
 };
