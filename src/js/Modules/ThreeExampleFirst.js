@@ -4,6 +4,7 @@ import ColorGUIHelper from "../helpers/ColorGUIHelper";
 import makeGUIFolder from "../helpers/makeGUIFolder";
 import DegRadHelper from "../helpers/DegRadHelper";
 import MinMaxGUIHelper from "../helpers/MinMaxGUIHelper";
+import setScissorHelper from "../helpers/setScissorHelper";
 import {
     Scene,
     PerspectiveCamera,
@@ -215,31 +216,10 @@ export default class ThreeExampleFirst {
         this.lightHelper && this.lightHelper.update();
     }
 
-    setScissorForElement(elem) {
-        const canvasRect = this.canvas.getBoundingClientRect();
-        const elemRect = elem.getBoundingClientRect();
-       
-        // вычисляем относительный прямоугольник холста
-        const right = Math.min(elemRect.right, canvasRect.right) - canvasRect.left;
-        const left = Math.max(0, elemRect.left - canvasRect.left);
-        const bottom = Math.min(elemRect.bottom, canvasRect.bottom) - canvasRect.top;
-        const top = Math.max(0, elemRect.top - canvasRect.top);
-       
-        const width = Math.min(canvasRect.width, right - left);
-        const height = Math.min(canvasRect.height, bottom - top);
-       
-        //  установка области отсечения для рендеринга только на эту часть холста
-        this.renderer.setScissor(left, top, width, height);
-        this.renderer.setViewport(left, top, width, height);
-       
-        // return aspect
-        return width / height;
-    }
-
     renderScene() {
         this.renderer.setScissorTest(true);
 
-        const mainAspect = this.setScissorForElement(this.view1Elem);
+        const mainAspect = setScissorHelper(this.view1Elem, this.canvas, this.renderer);
         this.camera.aspect = mainAspect;
         this.camera.updateProjectionMatrix();
         this.cameraHelper.update();
@@ -248,7 +228,7 @@ export default class ThreeExampleFirst {
 
         this.renderer.render(this.scene, this.camera);
 
-        const additionalAspect = this.setScissorForElement(this.view2Elem);
+        const additionalAspect = setScissorHelper(this.view2Elem, this.canvas, this.renderer);
         this.additionalCamera.aspect = additionalAspect;
         this.additionalCamera.updateProjectionMatrix();
         this.cameraHelper.visible = true;
