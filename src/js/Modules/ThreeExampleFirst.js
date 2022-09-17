@@ -131,8 +131,8 @@ export default class ThreeExampleFirst {
 
         this.scene.add(this.light);
 
-        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Ambient color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Ambient intensity');
+        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('intensity');
     }
 
     addHemisphereLight() {
@@ -146,7 +146,7 @@ export default class ThreeExampleFirst {
 
         this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Sky color');
         this.gui.addColor(new ColorGUIHelper(this.light, 'groundColor'), 'value').name('Ground Color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Hemisphere intensity');
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('intensity');
     }
 
     addDirectionalLight() {
@@ -160,11 +160,11 @@ export default class ThreeExampleFirst {
         this.scene.add(this.light);
         this.scene.add(this.light.target);
 
-        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Directional clr');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Directional int');
+        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('intensity');
 
-        makeGUIFolder(this.gui, this.light.position, 'Directiona position', this.updateLight.bind(this));
-        makeGUIFolder(this.gui, this.light.target.position, 'Directiona target', this.updateLight.bind(this));
+        makeGUIFolder(this.gui, this.light.position, 'Directional light position', this.updateLight.bind(this));
+        makeGUIFolder(this.gui, this.light.target.position, 'Directional light target', this.updateLight.bind(this));
     }
 
     addPointLight() {
@@ -179,11 +179,11 @@ export default class ThreeExampleFirst {
         this.lightHelper = new PointLightHelper(this.light);
         this.scene.add(this.lightHelper);
 
-        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Point color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Point intensity');
-        this.gui.add(this.light, 'distance', 0, 40).name('Point distance').onChange(this.updateLight.bind(this));
+        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('intensity');
+        this.gui.add(this.light, 'distance', 0, 40).name('distance').onChange(this.updateLight.bind(this));
 
-        makeGUIFolder(this.gui, this.light.position, 'Point position', this.updateLight.bind(this));
+        makeGUIFolder(this.gui, this.light.position, 'Point Light position', this.updateLight.bind(this));
     }
 
     addSpotLight() {
@@ -199,13 +199,13 @@ export default class ThreeExampleFirst {
         this.lightHelper = new SpotLightHelper(this.light);
         this.scene.add(this.lightHelper);
 
-        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Spot color');
-        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('Spot intensity');
-        this.gui.add(new DegRadHelper(this.light, 'angle'), 'value', 0, 90).name('Spot angle').onChange(this.updateLight.bind(this));
-        this.gui.add(this.light, 'penumbra', 0, 1, 0.01).name('Spot penumbra');
+        this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
+        this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('intensity');
+        this.gui.add(new DegRadHelper(this.light, 'angle'), 'value', 0, 90).name('Light angle').onChange(this.updateLight.bind(this));
+        this.gui.add(this.light, 'penumbra', 0, 1, 0.01).name('Light penumbra');
 
-        makeGUIFolder(this.gui, this.light.position, 'Spot position', this.updateLight.bind(this));
-        makeGUIFolder(this.gui, this.light.target.position, 'Spot target', this.updateLight.bind(this));
+        makeGUIFolder(this.gui, this.light.position, 'Spot Light position', this.updateLight.bind(this));
+        makeGUIFolder(this.gui, this.light.target.position, 'Spot Light target', this.updateLight.bind(this));
     }
 
     updateLight() {
