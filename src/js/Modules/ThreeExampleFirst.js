@@ -25,7 +25,8 @@ import {
     PointLightHelper,
     SpotLight,
     SpotLightHelper,
-    CameraHelper
+    CameraHelper,
+    Color
 } from 'three';
 
 export default class ThreeExampleFirst {
@@ -54,7 +55,7 @@ export default class ThreeExampleFirst {
         this.createSphere();
 
         // this.addAmbientLight();
-        // this.addHemisphereLight();
+        this.addHemisphereLight();
         // this.addDirectionalLight();
         this.addPointLight();
         // this.addSpotLight();
@@ -62,6 +63,7 @@ export default class ThreeExampleFirst {
         this.updateLight();
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.shadowMap.enabled = true;
         requestAnimationFrame(this.renderScene.bind(this));
     }
 
@@ -80,6 +82,7 @@ export default class ThreeExampleFirst {
         this.additionalControls.target.set(0, 5, 0);
         this.additionalControls.update();
 
+        this.scene.background = new Color('black');
         this.scene.add(this.cameraHelper);
     }
 
@@ -96,6 +99,7 @@ export default class ThreeExampleFirst {
         const planeGeometry = new PlaneGeometry(planeSize, planeSize)
         const planeMaterial = new MeshPhongMaterial({ map: planeTexture, side: DoubleSide});
         const mesh = new Mesh(planeGeometry, planeMaterial);
+        mesh.receiveShadow = true;
         mesh.rotation.x = Math.PI * -.5;
 
         this.scene.add(mesh);
@@ -106,6 +110,8 @@ export default class ThreeExampleFirst {
         const cubeGeometry = new BoxGeometry(cubeSize, cubeSize, cubeSize);
         const cubeMaterial = new MeshPhongMaterial({ color: '#8AC'});
         const cube = new Mesh(cubeGeometry, cubeMaterial);
+        cube.castShadow = true;
+        cube.receiveShadow = true;
         cube.position.set(cubeSize + 1, cubeSize / 2, 0);
 
         this.scene.add(cube);
@@ -119,6 +125,8 @@ export default class ThreeExampleFirst {
         const sphereGeometry = new SphereGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
         const sphereMaterial = new MeshPhongMaterial({ color: '#CA8'});
         const sphere = new Mesh(sphereGeometry, sphereMaterial);
+        sphere.castShadow = true;
+        sphere.receiveShadow = true;
         sphere.position.set(-sphereRadius - 1, sphereRadius + 2, 0);
 
         this.scene.add(sphere);
@@ -138,7 +146,7 @@ export default class ThreeExampleFirst {
     addHemisphereLight() {
         const skyColor = 0xB1E1FF;
         const groundColor = 0xB97A20;
-        const intensity = 1;
+        const intensity = .5;
 
         this.light = new HemisphereLight(skyColor, groundColor, intensity);
 
@@ -154,6 +162,7 @@ export default class ThreeExampleFirst {
         const intensity = 1;
 
         this.light = new DirectionalLight(color, intensity);
+        this.light.castShadow = true;
         this.light.position.set(0, 10, 0);
         this.light.target.position.set(-5, 0, 0);
 
@@ -172,7 +181,8 @@ export default class ThreeExampleFirst {
         const intensity = 1;
 
         this.light = new PointLight(color, intensity);
-        this.light.position.set(0, 10, 0);
+        this.light.castShadow = true;
+        this.light.position.set(0, 15, 0);
 
         this.scene.add(this.light);
 
@@ -183,14 +193,15 @@ export default class ThreeExampleFirst {
         this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('intensity');
         this.gui.add(this.light, 'distance', 0, 40).name('distance').onChange(this.updateLight.bind(this));
 
-        makeGUIFolder(this.gui, this.light.position, 'Point Light position', this.updateLight.bind(this));
+        makeGUIFolder(this.gui, this.light.position, 'Point Light position', this.updateLight.bind(this), 0, 30);
     }
 
     addSpotLight() {
         const color = '#ffffff';
         const intensity = 1;
         this.light = new SpotLight(color, intensity);
-        this.light.position.set(0, 10, 0);
+        this.light.castShadow = true;
+        this.light.position.set(0, 15, 0);
         this.light.target.position.set(-5, 0, 0);
 
         this.scene.add(this.light);
@@ -204,7 +215,7 @@ export default class ThreeExampleFirst {
         this.gui.add(new DegRadHelper(this.light, 'angle'), 'value', 0, 90).name('Light angle').onChange(this.updateLight.bind(this));
         this.gui.add(this.light, 'penumbra', 0, 1, 0.01).name('Light penumbra');
 
-        makeGUIFolder(this.gui, this.light.position, 'Spot Light position', this.updateLight.bind(this));
+        makeGUIFolder(this.gui, this.light.position, 'Spot Light position', this.updateLight.bind(this), 0, 30);
         makeGUIFolder(this.gui, this.light.target.position, 'Spot Light target', this.updateLight.bind(this));
     }
 
@@ -225,7 +236,7 @@ export default class ThreeExampleFirst {
         this.cameraHelper.update();
         this.cameraHelper.visible = false;
         
-
+        this.scene.background.set('#000000');
         this.renderer.render(this.scene, this.camera);
 
         const additionalAspect = setScissorHelper(this.view2Elem, this.canvas, this.renderer);
@@ -233,6 +244,7 @@ export default class ThreeExampleFirst {
         this.additionalCamera.updateProjectionMatrix();
         this.cameraHelper.visible = true;
 
+        this.scene.background.set(0x000040);
         this.renderer.render(this.scene, this.additionalCamera);
 
         requestAnimationFrame(this.renderScene.bind(this));
