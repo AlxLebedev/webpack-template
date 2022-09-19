@@ -1,9 +1,7 @@
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GUI } from 'dat.gui';
-import ColorGUIHelper from "../helpers/ColorGUIHelper";
-import makeGUIFolder from "../helpers/makeGUIFolder";
+import { ColorGUIHelper, MinMaxGUIHelper, makeGUIFolder } from '../helpers/GUIHelpers';
 import DegRadHelper from "../helpers/DegRadHelper";
-import MinMaxGUIHelper from "../helpers/MinMaxGUIHelper";
 import setScissorHelper from "../helpers/setScissorHelper";
 import {
     Scene,
