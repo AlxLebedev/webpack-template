@@ -19,6 +19,7 @@ import {
     AmbientLight,
     HemisphereLight,
     DirectionalLight,
+    DirectionalLightHelper,
     PointLight,
     PointLightHelper,
     SpotLight,
@@ -54,8 +55,8 @@ export default class ThreeExampleFirst {
 
         // this.addAmbientLight();
         this.addHemisphereLight();
-        // this.addDirectionalLight();
-        this.addPointLight();
+        this.addDirectionalLight();
+        // this.addPointLight();
         // this.addSpotLight();
         
         this.updateLight();
@@ -166,6 +167,9 @@ export default class ThreeExampleFirst {
 
         this.scene.add(this.light);
         this.scene.add(this.light.target);
+
+        this.lightHelper = new DirectionalLightHelper(this.light);
+        this.scene.add(this.lightHelper);
 
         this.gui.addColor(new ColorGUIHelper(this.light, 'color'), 'value').name('Light color');
         this.gui.add(this.light, 'intensity', 0, 2, 0.01).name('intensity');
