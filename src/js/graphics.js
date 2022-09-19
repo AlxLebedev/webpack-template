@@ -13,5 +13,7 @@ import ThreeExampleFirst from './Modules/ThreeExampleFirst';
 // const torus = new Torus();
 // torus.init();
 
-const threeExampleFirst = new ThreeExampleFirst();
+const threeExampleFirst = new ThreeExampleFirst([ 'HemisphereLight', 'PointLight' ]);
 threeExampleFirst.init();
+
+// AmbientLight | HemisphereLight | DirectionalLight | PointLight | SpotLight
